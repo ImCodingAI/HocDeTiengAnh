@@ -1,13 +1,28 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { useVocabDB } from '../hooks/useVocabDB';
 import { dbService } from '../db';
 import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
-import { Download, Upload, Moon, Sun, Trash2, Settings as SettingsIcon } from 'lucide-react';
+import { Input } from '../components/ui/Input';
+import { Download, Upload, Moon, Sun, Trash2, Settings as SettingsIcon, Key } from 'lucide-react';
 
 export function Settings() {
   const { settings, triggerUpdate } = useVocabDB();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [apiKey, setApiKey] = useState("");
+
+  useEffect(() => {
+    if (settings && settings.geminiApiKey) {
+      setApiKey(settings.geminiApiKey);
+    }
+  }, [settings]);
+
+  const handleSaveApiKey = async () => {
+    if (!settings) return;
+    await dbService.putSettings({ ...settings, geminiApiKey: apiKey });
+    triggerUpdate();
+    alert("Đã lưu API Key.");
+  };
 
   const toggleTheme = async () => {
     if (!settings) return;
@@ -95,6 +110,30 @@ export function Settings() {
 
       <div className="p-6 md:p-8 flex-1 w-full max-w-4xl mx-auto space-y-6 animate-in fade-in slide-in-from-bottom-4">
         
+        <Card className="glass border-border overflow-hidden">
+          <CardHeader className="bg-card">
+            <CardTitle>Tính năng AI</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6 p-6">
+            <div className="flex flex-col gap-2">
+              <div>
+                <p className="font-semibold">Gemini API Key</p>
+                <p className="text-sm text-muted-foreground">Nhập khóa API Gemini của bạn để bật tính năng gợi ý từ vựng mới mỗi ngày bằng AI.</p>
+              </div>
+              <div className="flex gap-2 mt-2">
+                <Input 
+                  type="password" 
+                  placeholder="AIzaSy..." 
+                  value={apiKey} 
+                  onChange={(e) => setApiKey(e.target.value)} 
+                  className="flex-1"
+                />
+                <Button onClick={handleSaveApiKey}><Key className="w-4 h-4 mr-2" /> Lưu</Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
         <Card className="glass border-border overflow-hidden">
           <CardHeader className="bg-card">
             <CardTitle>Giao diện</CardTitle>

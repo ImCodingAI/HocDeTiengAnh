@@ -37,6 +37,7 @@ export interface Settings {
   id: "user";
   wordsPerDay: number;
   theme: "light" | "dark";
+  geminiApiKey?: string;
 }
 
 export interface ExportData {

@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, CardContent } from '../components/ui/Card';
 import { useVocabDB } from '../hooks/useVocabDB';
 import { Link } from 'react-router-dom';
+import { AILearningSuggestion } from '../components/AILearningSuggestion';
 
 export function Dashboard() {
   const { words, days } = useVocabDB();
@@ -65,6 +66,8 @@ export function Dashboard() {
           <div className="absolute top-[-50px] right-[-50px] w-64 h-64 bg-indigo-400/20 rounded-full blur-3xl pointer-events-none"></div>
           <div className="absolute bottom-[-30px] left-[-20px] w-32 h-32 bg-white/10 rounded-full blur-xl pointer-events-none"></div>
         </div>
+
+        <AILearningSuggestion />
 
         {words.length > 0 && (
           <div className="rounded-2xl glass border-border flex-1 mt-6 overflow-hidden max-w-full">
